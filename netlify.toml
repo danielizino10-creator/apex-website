@@ -1,3 +1,0 @@
-here[build]
-  functions = "netlify/functions"
-  publish = "."
