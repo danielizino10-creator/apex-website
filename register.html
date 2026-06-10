@@ -1,0 +1,107 @@
+here<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Free Account - Apex Global Brokers</title>
+    <style>
+        body {
+            background-color: #0d1b2a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .signup-container {
+            background-color: #1b263b;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            width: 85%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h2 { color: #00b4d8; margin-bottom: 20px; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; margin-bottom: 5px; font-size: 14px; color: #e0e1dd; }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #415a77;
+            border-radius: 5px;
+            background-color: #0d1b2a;
+            color: #fff;
+            box-sizing: border-box;
+        }
+        input:focus { outline: none; border-color: #00b4d8; }
+        .btn {
+            background-color: #00b4d8;
+            color: #0d1b2a;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn:hover { background-color: #0096c7; }
+        .login-link { margin-top: 15px; font-size: 13px; color: #a9d6e5; }
+        .login-link a { color: #00b4d8; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="signup-container">
+    <h2>Create Free Account</h2>
+    <p>Join Apex Global Brokers today</p>
+    <form id="signupForm">
+        <div class="input-group">
+            <label>Full Name</label>
+            <input type="text" id="fullName" placeholder="Enter your full name" required>
+        </div>
+        <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" id="email" placeholder="Enter your email" required>
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Create a strong password" required>
+        </div>
+        <button type="submit" class="btn">Register</button>
+    </form>
+    <div class="login-link">
+        Already have an account? <a href="#">Login here</a>
+    </div>
+</div>
+<script>
+  const form = document.getElementById('signupForm');
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('fullName').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      try {
+        const response = await fetch('/.netlify/functions/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            alert(data.message || "Account created successfully!");
+        } else {
+            alert("Server error: " + (data.message || "Could not register."));
+        }
+      } catch (error) {
+        alert("Network error: Something went wrong connecting to server.");
+      }
+    });
+  }
+</script>
+</body>
+</html>
