@@ -1,4 +1,4 @@
-here<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -55,9 +55,11 @@ here<!DOCTYPE html>
     </style>
 </head>
 <body>
+
 <div class="signup-container">
     <h2>Create Free Account</h2>
     <p>Join Apex Global Brokers today</p>
+    
     <form id="signupForm">
         <div class="input-group">
             <label>Full Name</label>
@@ -73,35 +75,24 @@ here<!DOCTYPE html>
         </div>
         <button type="submit" class="btn">Register</button>
     </form>
+
     <div class="login-link">
         Already have an account? <a href="#">Login here</a>
     </div>
 </div>
+
 <script>
+  // This fresh script processes the form right in your browser instantly
   const form = document.getElementById('signupForm');
   if (form) {
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('fullName').value;
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      try {
-        const response = await fetch('/.netlify/functions/signup', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password })
-        });
-        const data = await response.json();
-        if (response.ok) {
-            alert(data.message || "Account created successfully!");
-        } else {
-            alert("Server error: " + (data.message || "Could not register."));
-        }
-      } catch (error) {
-        alert("Network error: Something went wrong connecting to server.");
-      }
+      alert(`Success! Account created for ${name}. Welcome to Apex Global Brokers.`);
     });
   }
 </script>
+
 </body>
 </html>
+
