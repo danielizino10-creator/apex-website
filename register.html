@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -49,10 +49,11 @@
             cursor: pointer;
             margin-top: 10px;
         }
-        .btn:hover { background-color: #0096c7; }
+        .btn:disabled { background-color: #415a77; cursor: not-allowed; }
         .login-link { margin-top: 15px; font-size: 13px; color: #a9d6e5; }
         .login-link a { color: #00b4d8; text-decoration: none; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -71,9 +72,9 @@
         </div>
         <div class="input-group">
             <label>Password</label>
-            <input type="password" id="password" placeholder="Create a strong password" required>
+            <input type="password" id="password" placeholder="Create a strong password" minlength="6" required>
         </div>
-        <button type="submit" class="btn">Register</button>
+        <button type="submit" id="submitBtn" class="btn">Register</button>
     </form>
 
     <div class="login-link">
@@ -82,17 +83,51 @@
 </div>
 
 <script>
-  // This fresh script processes the form right in your browser instantly
+  // Fully connected cloud database endpoints
+  const SUPABASE_URL = "https://ydysuulfenahdnrvgmpb.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_Ge0LtUpUjdII3qAZfq0KhA_2bzch4yB";
+
+  // Initialize Connection
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
   const form = document.getElementById('signupForm');
+  const submitBtn = document.getElementById('submitBtn');
+
   if (form) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Creating Account...";
+
       const name = document.getElementById('fullName').value;
-      alert(`Success! Account created for ${name}. Welcome to Apex Global Brokers.`);
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      // Create live user database record
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            full_name: name
+          }
+        }
+      });
+
+      if (error) {
+        alert(`Registration Error: ${error.message}`);
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Register";
+      } else {
+        alert(`Success! Account created for ${name}. Please check your email inbox to confirm your login!`);
+        form.reset();
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Register";
+      }
     });
   }
 </script>
 
 </body>
 </html>
-
