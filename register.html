@@ -1,4 +1,4 @@
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -61,7 +61,7 @@
     <h2>Create Free Account</h2>
     <p>Join Apex Global Brokers today</p>
     
-    <form id="signupForm">
+    <form id="signupForm" onsubmit="return false;">
         <div class="input-group">
             <label>Full Name</label>
             <input type="text" id="fullName" placeholder="Enter your full name" required>
@@ -74,7 +74,7 @@
             <label>Password</label>
             <input type="password" id="password" placeholder="Create a strong password" minlength="6" required>
         </div>
-        <button type="submit" id="submitBtn" class="btn">Register</button>
+        <button type="button" id="submitBtn" class="btn" onclick="handleRegistration()">Register</button>
     </form>
 
     <div class="login-link">
@@ -83,51 +83,55 @@
 </div>
 
 <script>
-  // Fully connected cloud database endpoints
   const SUPABASE_URL = "https://ydysuulfenahdnrvgmpb.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_Ge0LtUpUjdII3qAZfq0KhA_2bzch4yB";
 
   // Initialize Connection
   const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const form = document.getElementById('signupForm');
-  const submitBtn = document.getElementById('submitBtn');
+  async function handleRegistration() {
+    const submitBtn = document.getElementById('submitBtn');
+    const name = document.getElementById('fullName').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-  if (form) {
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      submitBtn.disabled = true;
-      submitBtn.innerText = "Creating Account...";
+    // Quick mobile input check
+    if (!name || !email || !password) {
+        alert("Please fill in all details before registering.");
+        return;
+    }
+    if (password.length < 6) {
+        alert("Password must be at least 6 characters long.");
+        return;
+    }
+    
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Creating Account...";
 
-      const name = document.getElementById('fullName').value;
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      // Create live user database record
-      const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          data: {
-            full_name: name
-          }
+    // Create live user database record
+    const { data, error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: {
+          full_name: name
         }
-      });
-
-      if (error) {
-        alert(`Registration Error: ${error.message}`);
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Register";
-      } else {
-        alert(`Success! Account created for ${name}. Please check your email inbox to confirm your login!`);
-        form.reset();
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Register";
       }
     });
+
+    if (error) {
+      alert(`Registration Error: ${error.message}`);
+      submitBtn.disabled = false;
+      submitBtn.innerText = "Register";
+    } else {
+      alert(`Success! Account created for ${name}. You can check your user dashboard inside Supabase!`);
+      document.getElementById('signupForm').reset();
+      submitBtn.disabled = false;
+      submitBtn.innerText = "Register";
+    }
   }
 </script>
 
 </body>
 </html>
+￼Enter
